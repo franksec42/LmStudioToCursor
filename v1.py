@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Response
+from flask_cors import CORS
 from openai import OpenAI
 import json
 
@@ -6,32 +7,48 @@ client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 
 def chat_endpoint():
     data = request.json
-    user_message = data.get('message', 'hi')
+    messages = data.get('messages', [])
+    model = data.get('model', 'lmstudio-ai/gemma-2b-it-GGUF')
 
     def generate():
-        completion = client.chat.completions.create(
-            model="lmstudio-ai/gemma-2b-it-GGUF",
-            messages=[
-                {"role": "system", "content": "Always answer in rhymes."},
-                {"role": "user", "content": user_message}
-            ],
-            temperature=0.7,
-            stream=True
-        )
+        try:
+            completion = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=0.7,
+                stream=True
+            )
 
-        for chunk in completion:
-            if chunk.choices[0].delta.content is not None:
-                yield f"data: {json.dumps({'response': chunk.choices[0].delta.content})}\n\n"
+            for chunk in completion:
+                if chunk.choices[0].delta.content is not None:
+                    yield f"data: {json.dumps({'content': chunk.choices[0].delta.content})}\n\n"
+            
+            yield "data: [DONE]\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+        finally:
+            yield "data: [DONE]\n\n"
 
-    return Response(generate(), content_type='text/event-stream')
+    response = Response(generate(), content_type='text/event-stream')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
-# Función para inicializar y configurar la ruta
 def setup_chat_route(app):
-    app.route('/chat/completions', methods=['POST'])(chat_endpoint)
+    @app.route('/chat/completions', methods=['POST', 'OPTIONS'])
+    def handle_chat():
+        if request.method == 'OPTIONS':
+            response = jsonify({'status': 'OK'})
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+            return response
+        return chat_endpoint()
 
-# Función para iniciar el servidor
 def run_server():
     app = Flask(__name__)
+    CORS(app)
     setup_chat_route(app)
     app.run(host='0.0.0.0', port=5000)
 
