@@ -34,11 +34,12 @@ def chat_endpoint():
 
             for chunk in completion:
                 if chunk.choices[0].delta.content is not None:
-                    yield f"data: {json.dumps({'content': chunk.choices[0].delta.content})}\n\n"
+                    yield f"data: {json.dumps({'id': 'chatcmpl-' + str(chunk.id), 'object': 'chat.completion.chunk', 'created': chunk.created, 'model': model, 'choices': [{'index': 0, 'delta': {'content': chunk.choices[0].delta.content}, 'finish_reason': None}]})}\n\n"
             
+            yield f"data: {json.dumps({'id': 'chatcmpl-' + str(chunk.id), 'object': 'chat.completion.chunk', 'created': chunk.created, 'model': model, 'choices': [{'index': 0, 'delta': {}, 'finish_reason': 'stop'}]})}\n\n"
             yield "data: [DONE]\n\n"
         except Exception as e:
-            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+            yield f"data: {json.dumps({'error': {'message': str(e), 'type': 'internal_error'}})}\n\n"
         finally:
             yield "data: [DONE]\n\n"
 
