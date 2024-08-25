@@ -3,8 +3,21 @@ from flask_cors import CORS
 from openai import OpenAI
 import json
 
+app = Flask(__name__)
+CORS(app)
+
 client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = app.make_default_options_response()
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
+
+@app.route('/chat/completions', methods=['POST'])
 def chat_endpoint():
     data = request.json
     messages = data.get('messages', [])
@@ -35,21 +48,14 @@ def chat_endpoint():
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-def setup_chat_route(app):
-    @app.route('/chat/completions', methods=['POST', 'OPTIONS'])
-    def handle_chat():
-        if request.method == 'OPTIONS':
-            response = jsonify({'status': 'OK'})
-            response.headers.add('Access-Control-Allow-Origin', '*')
-            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-            return response
-        return chat_endpoint()
+@app.route('/models', methods=['GET'])
+def get_models():
+    # Aquí puedes implementar la lógica para obtener los modelos
+    # Por ahora, solo devolveremos una respuesta de ejemplo
+    models = ["modelo1", "modelo2", "modelo3"]
+    return jsonify(models)
 
 def run_server():
-    app = Flask(__name__)
-    CORS(app)
-    setup_chat_route(app)
     app.run(host='0.0.0.0', port=5000)
 
 if __name__ == '__main__':
