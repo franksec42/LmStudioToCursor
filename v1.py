@@ -21,7 +21,7 @@ def handle_preflight():
 def chat_endpoint():
     data = request.json
     messages = data.get('messages', [])
-    model = data.get('model', 'lmstudio-ai/gemma-2b-it-GGUF')
+    model = data.get('model', 'lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF')
 
     def generate():
         try:

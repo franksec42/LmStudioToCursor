@@ -4,9 +4,25 @@ This project allows you to integrate LMStudio's open-source models with Cursor, 
 
 ## Prerequisites
 
-- Python 3.7+
+- Python 3.10
 - LMStudio
 - Cursor
+
+## Installation
+
+To install the required dependencies, run the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
+This will install all required dependencies:
+- Flask 3.0.3
+- Flask-Cors 4.0.1
+- OpenAI 1.42.0
+- HTTPX 0.27.0
+- Anyio 4.4.0
+- Typing Extensions 4.12.2
 
 ## Setup
 
@@ -47,3 +63,25 @@ To switch back to the official OpenAI GPT-4:
 ## Note
 
 This setup allows you to leverage open-source models through LMStudio while maintaining the Cursor interface. Always ensure you comply with the terms of service and licensing agreements of all involved software.
+
+## Contributing
+
+We welcome contributions to improve this integration! Here's how you can help:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/improvement`)
+3. Make your changes
+4. Commit your changes (`git commit -am 'Add new feature'`)
+5. Push to the branch (`git push origin feature/improvement`)
+6. Create a Pull Request
+
+## Social Media and Contact
+
+- GitHub: [LmStudioToCursor](https://github.com/olweraltuve/LmStudioToCursor)
+- LinkedIn: [Oliver Altuve](https://www.linkedin.com/in/olwer-altuve-santaromita-97824518a/)
+- Email: olwerjose33@hotmail.com
+
+For questions or support, feel free to:
+- Open an issue on GitHub
+- Send an email
+- Connect with me on LinkedIn
