@@ -1,0 +1,40 @@
+{
+    "mssql.connections": [
+        {
+            "server": "{{put-server-name-here}}",
+            "database": "{{put-database-name-here}}",
+            "user": "{{put-username-here}}",
+            "password": "",
+            "id": "01CE1C16-27AA-478C-A1B9-7341751169D3",
+            "groupId": "ED7F0F62-5AD1-4C3F-8C6A-1A73E58A7C02"
+        }
+    ],
+    "security.workspace.trust.untrustedFiles": "open",
+    "git.openRepositoryInParentFolders": "always",
+    "python.defaultInterpreterPath": "/opt/anaconda3/bin/python",
+    "editor.largeFileOptimizations": false,
+    "terminal.integrated.inheritEnv": false,
+    "workbench.colorCustomizations": {},
+    "cSpell.userWords": [
+        "csvfile",
+        "Thirdparty"
+    ],
+    "git.enableSmartCommit": true,
+    "workbench.editor.enablePreview": false,
+    "mssql.connectionGroups": [
+        {
+            "name": "ROOT",
+            "id": "ED7F0F62-5AD1-4C3F-8C6A-1A73E58A7C02"
+        }
+    ],
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "kotlin.languageServer.enabled": false,
+    "kotlin.debugAdapter.enabled": false,
+    "explorer.confirmDragAndDrop": false,
+    "git.enableCommitSigning": true,
+    "gitlens.views.commitDetails.files.layout": "list",
+    "openai.apiKey": "lm-studio-key",
+    "openai.apiBase": "http://localhost:8000/v1",
+    "openai.model": "qwen/qwen3-30b-a3b-2507"
+}
+
